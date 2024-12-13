@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página PLC</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    button { margin: 10px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h1>Monitoramento do PLC</h1>
+  <p><strong>Dados em Tempo Real:</strong> <span id="realtime-data">Aguardando...</span></p>
+
+  <button onclick="sendAction('start')">Iniciar</button>
+  <button onclick="sendAction('stop')">Parar</button>
+
+  <script>
+    // Atualizar dados em tempo real
+    setInterval(async () => {
+      const response = await fetch('http://seu-node-red-endereco/api/dados'); // Atualize o URL
+      const data = await response.json();
+      document.getElementById('realtime-data').textContent = data.valor;
+    }, 1000);
+
+    // Enviar ação para o PLC
+    async function sendAction(action) {
+      await fetch('http://seu-node-red-endereco/api/acao', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comando: action }),
+      });
+      alert(Ação "${action}" enviada!);
+    }
+  </script>
+</body>
+</html>
